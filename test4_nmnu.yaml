@@ -1,0 +1,192 @@
+theory:
+  ExtraTheory:
+    python_path: /home/hayyim/Escritorio/Cobaya_Extrap/Likelihoods/MyLike
+    extra_args: 
+      N_ur: 0.00441
+      non linear: hmcode
+      l_max_scalars: 4000
+      lensing: 'yes'
+      Omega_Lambda: 0
+      nonlinear_min_k_max: 20
+      N_ncdm: 1
+      deg_ncdm: 3
+likelihood:
+  desi_dr2.desi_bao_all:
+    python_path: /home/hayyim/Escritorio/Cobaya_Extrap/CobayaExt/lib64/python3.12/site-packages/cobaya/likelihoods/bao
+  sn.desy5: null
+  planck_2018_lowl.TT_clik: ""
+  planck_2018_lowl.EE_clik: ""
+  planck_NPIPE_highl_CamSpec.TTTEEE: ""
+  act_dr6_lenslike.ACTDR6LensLike:
+    lens_only: false
+    variant: actplanck_baseline
+    lmax: 4000
+    version: v1.2
+params:
+  logA:
+    prior:
+      min: 1.61
+      max: 3.91
+    ref:
+      dist: norm
+      loc: 3.05
+      scale: 0.001
+    proposal: 0.001
+    latex: \log(10^{10} A_\mathrm{s})
+    drop: true
+  A_s:
+    value: 'lambda logA: 1e-10*np.exp(logA)'
+    latex: A_\mathrm{s}
+  n_s:
+    prior:
+      min: 0.8
+      max: 1.2
+    ref:
+      dist: norm
+      loc: 0.965
+      scale: 0.004
+    proposal: 0.002
+    renames: ns
+    latex: n_\mathrm{s}
+  theta_s_100:
+    prior:
+      min: 0.5
+      max: 10
+    ref:
+      dist: norm
+      loc: 1.0416
+      scale: 0.0004
+    proposal: 0.0002
+    renames: theta_MC_100
+    latex: 100\theta_\mathrm{s}
+  H0:
+    latex: H_0
+  omega_b:
+    prior:
+      min: 0.005
+      max: 0.1
+    ref:
+      dist: norm
+      loc: 0.02237
+      scale: 0.0001
+    proposal: 0.0001
+    renames: ombh2
+    latex: \Omega_\mathrm{b} h^2
+  omega_cdm:
+    prior:
+      min: 0.001
+      max: 0.99
+    ref:
+      dist: norm
+      loc: 0.12
+      scale: 0.001
+    proposal: 0.0005
+    renames: omch2
+    latex: \Omega_\mathrm{c} h^2
+  tau_reio:
+    prior:
+      min: 0.01
+      max: 0.8
+    ref:
+      dist: norm
+      loc: 0.0544
+      scale: 0.006
+    proposal: 0.003
+    renames: tau
+    latex: \tau_\mathrm{reio}
+  m_ncdm:
+    prior:
+      min: -5.0
+      max: 5.0
+    ref:
+      dist: norm
+      loc: 0.0067
+      scale: 0.033
+    proposal: 0.01
+    renames: mnu
+    latex: m_\nu
+  sum_mnu:
+    derived: 'lambda m_ncdm: 3 * m_ncdm'
+    latex: \sum m_\nu
+  w0_fld:
+    prior:
+      min: -3
+      max: 1
+    ref:
+      dist: norm
+      loc: -0.99
+      scale: 0.02
+    proposal: 0.02
+    renames: w
+    latex: \omega_{0}
+  wa_fld:
+    prior:
+      min: -3
+      max: 2
+    ref:
+      dist: norm
+      loc: 0
+      scale: 0.05
+    proposal: 0.05
+    renames: wa
+    latex: \omega_{a}
+  Omega_k:
+    prior:
+      min: -0.3
+      max: 0.3
+    ref:
+      dist: norm
+      loc: 0.0
+      scale: 0.01
+    proposal: 0.01
+    renames: omk
+    latex: \Omega_\mathrm{k}
+  Omega_m:
+    latex: \Omega_\mathrm{m}
+  omegamh2:
+    derived: 'lambda Omega_m, H0: Omega_m*(H0/100)**2'
+    latex: \Omega_\mathrm{m} h^2
+  YHe:
+    latex: Y_\mathrm{P}
+  z_reio:
+    latex: z_\mathrm{re}
+  sigma8:
+    latex: \sigma_8
+  s8h5:
+    derived: 'lambda sigma8, H0: sigma8*(H0*1e-2)**(-0.5)'
+    latex: \sigma_8/h^{0.5}
+  s8omegamp5:
+    derived: 'lambda sigma8, Omega_m: sigma8*Omega_m**0.5'
+    latex: \sigma_8 \Omega_\mathrm{m}^{0.5}
+  s8omegamp25:
+    derived: 'lambda sigma8, Omega_m: sigma8*Omega_m**0.25'
+    latex: \sigma_8 \Omega_\mathrm{m}^{0.25}
+  A:
+    derived: 'lambda A_s: 1e9*A_s'
+    latex: 10^9 A_\mathrm{s}
+  clamp:
+    derived: 'lambda A_s, tau_reio: 1e9*A_s*np.exp(-2*tau_reio)'
+    latex: 10^9 A_\mathrm{s} e^{-2\tau}
+  age:
+    latex: '{\rm{Age}}/\mathrm{Gyr}'
+  rs_drag:
+    latex: r_\mathrm{drag}
+  H0rdrag:
+    derived: 'lambda H0, rs_drag: H0 * rs_drag'
+    latex: H_0 r_\mathrm{d}
+    
+sampler:
+  mcmc:
+    drag: false
+    oversample_power: 0.4
+    proposal_scale: 1.9
+    learn_proposal: true
+    covmat: /home/hayyim/Descargas/AmorPropio/w0waCDM_k_nu/chain.covmat
+    temperature: 1
+    Rminus1_stop: 0.01
+    Rminus1_cl_stop: 0.2
+    seed: null
+    measure_speeds: true
+    max_tries: 1000
+
+output: Chains/Pruebas_negnu/debugs
